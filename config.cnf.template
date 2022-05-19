@@ -1,0 +1,17 @@
+[ req ]
+prompt             = no
+default_bits       = 4096
+distinguished_name = req_distinguished_name
+req_extensions     = req_ext
+[ req_distinguished_name ]
+countryName                = US
+localityName               = Oregon
+organizationName           = Formant
+commonName                 = IP_ADDRESS
+[ req_ext ]
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+IP.1 = IP_ADDRESS
+IP.2 = 127.0.0.1

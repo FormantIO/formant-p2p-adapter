@@ -1,0 +1,4 @@
+isodate
+formant==1.61.*
+fastapi
+uvicorn
