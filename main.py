@@ -22,7 +22,9 @@ dps = dict()
 def handle_telemetry(datapoint):
     global dps
     stream = datapoint.datapoint.stream
-    dps[stream] = MessageToDict(datapoint.datapoint)
+    entry = MessageToDict(datapoint.datapoint)
+    del entry["stream"]
+    dps[stream] = entry
 
 
 # Handling data ...
