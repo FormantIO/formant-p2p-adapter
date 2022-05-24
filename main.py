@@ -58,7 +58,7 @@ async def status(request: Request):
     )
 
 
-@app.post("v1/lan-rtc-offer")
+@app.post("/v1/lan-rtc-offer")
 async def send_teleop_offer(request: Request):
     params = await request.json()
     config_request = agent_pb2.PostLanRtcOfferRequest(offer=params["offer"])
