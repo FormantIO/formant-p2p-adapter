@@ -4,6 +4,7 @@ from formant.sdk.agent.v1 import Client as FormantClient
 from google.protobuf.json_format import MessageToDict
 from fastapi.middleware.cors import CORSMiddleware
 from formant.protos.agent.v1 import agent_pb2
+import json
 
 
 FRONTEND_ORIGIN = "https://myfrontenddomain.com"
@@ -15,14 +16,13 @@ fclient = FormantClient(
     ignore_throttled=True, ignore_unavailable=True, agent_url="localhost:5501",
 )
 
-dps = []
+dps = dict()
 
 
 def handle_telemetry(datapoint):
     global dps
-    dps.append(MessageToDict(datapoint))
-    if len(dps) > 100:
-        dps.pop(0)
+    stream = datapoint.datapoint.stream
+    dps[stream] = MessageToDict(datapoint.datapoint)
 
 
 # Handling data ...
@@ -30,7 +30,7 @@ fclient.register_telemetry_listener_callback(handle_telemetry, stream_filter=[])
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN, "http://localhost:5000"],
+    allow_origins=[FRONTEND_ORIGIN, "http://localhost:9146"],
     allow_methods=["GET", "POST"],
 )
 
@@ -67,6 +67,4 @@ async def send_teleop_offer(request: Request):
 @app.get("/telemetry")
 async def latest_telemtry(request: Request):
     global dps
-    ret = dps.copy()
-    dps = []
-    return ret
+    return dps
